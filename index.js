@@ -1,6 +1,5 @@
 import { TwitterApi } from "twitter-api-v2";
 import axios from "axios";
-import cron from "node-cron";
 import express from "express";
 
 const app = express();
