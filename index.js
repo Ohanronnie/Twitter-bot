@@ -80,5 +80,6 @@ async function TweetRate() {
   console.log(currencyPosted, coinPosted);
 }
 app.get("/cron", TweetRate);
+app.get("/", () => console.log(Date.now()));
 app.listen(process.env.PORT || 3000, () => "app is running already");
 export default app;
