@@ -1,5 +1,6 @@
 import { TwitterApi } from "twitter-api-v2";
 import axios from "axios";
+import cron from "node-cron";
 import express from "express";
 
 const app = express();
@@ -28,7 +29,7 @@ const client = new TwitterApi({
   "Testing"
 )
 */
-async function TweetRate() {
+async function TweetRate(req, res) {
   const currency_rates = {};
   const crypto_rates = {};
   for (let i = 0; i < Credentials.RATES.CURRENCY.length; i++) {
@@ -75,10 +76,12 @@ async function TweetRate() {
   `;
   const currencyPosted = await client.v2.tweet(postString);
   const coinPosted = await client.v2.tweet(coinString);
-
-  console.log(currencyPosted, coinPosted);
+  res.json({ currency: currencyPosted, coin: coinPosted });
 }
 app.get("/cron", TweetRate);
-app.get("/", () => console.log(Date.now()));
+app.get("/", (req, res) => {
+  console.log(Date.now());
+  res.sendStatus(200);
+});
 app.listen(process.env.PORT || 3000, () => "app is running already");
 export default app;
