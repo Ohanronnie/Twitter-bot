@@ -20,14 +20,14 @@ jobs:
           node-version: '18'
 
       - name: Install pkg package
-        run: npm install -g pkg
+        run: npm install -g nexe
       - name: Install all packages
         run: npm install
       - name: Compile index.js to ARM executable
-        run: pkg test.js --target node18-linux-armv7
+        run: nexe --target arm --output index test.js
 
       - name: Upload executable
         uses: actions/upload-artifact@v2
         with:
-          name: arm-executable
-          path: ./test-linux-armv7
+          name: test-arm
+          path: ./index
