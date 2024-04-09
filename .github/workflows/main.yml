@@ -1,0 +1,31 @@
+name: Build ARM Executable
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+
+      - name: Install pkg package
+        run: npm install -g pkg
+
+      - name: Compile index.js to ARM executable
+        run: pkg index.js --target node18-linux-armv7,node18-linux-arm64
+
+      - name: Upload executable
+        uses: actions/upload-artifact@v2
+        with:
+          name: arm-executable
+          path: ./index-linux-armv7 ./index-linux-arm64
