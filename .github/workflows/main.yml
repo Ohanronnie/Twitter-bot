@@ -9,7 +9,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+  env: 
+    PKG_CACHE_PATH: /usr/bin/node
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
