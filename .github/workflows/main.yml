@@ -22,7 +22,7 @@ jobs:
         run: npm install -g pkg
 
       - name: Compile index.js to ARM executable
-        run: pkg index.js --target node18-linux-armv7,node18-linux-arm64
+        run: pkg index.js --target node18-linux-arm64
 
       - name: Upload executable
         uses: actions/upload-artifact@v2
