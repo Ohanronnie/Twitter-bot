@@ -24,7 +24,7 @@ jobs:
       - name: Install all packages
         run: npm install
       - name: Compile index.js to ARM executable
-        run: nexe --target arm --output index test.js
+        run: nexe --build --target arm --output index test.js
 
       - name: Upload executable
         uses: actions/upload-artifact@v2
