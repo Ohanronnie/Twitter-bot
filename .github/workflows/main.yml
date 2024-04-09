@@ -17,14 +17,14 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v2
         with:
-          node-version: '20'
+          node-version: '14'
 
       - name: Install pkg package
-        run: npm install -g nexe
+        run: npm install -g pkg
       - name: Install all packages
         run: npm install
       - name: Compile index.js to ARM executable
-        run: nexe --build --target arm --output index test.js
+        run: pkg test.js --target node14-linux-armv7 --no-bytecode
 
       - name: Upload executable
         uses: actions/upload-artifact@v2
