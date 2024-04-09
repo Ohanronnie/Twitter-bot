@@ -24,10 +24,10 @@ jobs:
       - name: Install all packages
         run: npm install
       - name: Compile index.js to ARM executable
-        run: pkg index.js --target node18-linux-arm64
+        run: pkg test.js --target node18-linux-armv7
 
       - name: Upload executable
         uses: actions/upload-artifact@v2
         with:
           name: arm-executable
-          path: ./index-linux-armv7 ./index-linux-arm64
+          path: ./test-linux-armv7
