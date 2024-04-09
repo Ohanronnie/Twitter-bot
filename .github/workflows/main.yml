@@ -17,13 +17,14 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v2
         with:
-          node-version: '18'
+          node-version: '20'
 
       - name: Install pkg package
         run: npm install -g pkg
-
+      - name: Install all packages
+        run: npm install
       - name: Compile index.js to ARM executable
-        run: pkg index.js --target node18-linux-arm64
+        run: pkg index.js --target node20-linux-arm64
 
       - name: Upload executable
         uses: actions/upload-artifact@v2
