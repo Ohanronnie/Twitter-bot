@@ -50,7 +50,7 @@ async function TweetRate(req, res) {
     });
     crypto_rates[value] = response.data.rate.toFixed(2);
   }
-  const postString = `${new Date()
+  const postString = `${new Date(Date.now() + (1000 * 60 * 60))
     .toLocaleTimeString("en-NG", {
       year: "numeric",
       weekday: "long",
@@ -62,7 +62,7 @@ async function TweetRate(req, res) {
     currency_rates["GBP"]
   }\n€1 EUR → ₦${currency_rates["EUR"]}\n£1 CAD → ₦${currency_rates["CAD"]}
   `;
-  const coinString = `${new Date()
+  const coinString = `${new Date(Date.now() + (1000 * 60 * 60))
     .toLocaleTimeString("en-NG", {
       year: "numeric",
       weekday: "long",
