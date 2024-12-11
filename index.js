@@ -15,7 +15,7 @@ class Credentials {
     URL: "https://rest.coinapi.io/v1/exchangerate",
     API_KEY: "1942736E-D354-42A6-9D95-0E49D3283F54",
     COINS: ["BTC", "ETH", "BNB"],
-    CURRENCY: ["USD", "GBP", "EUR", "CAD"],
+    CURRENCY: ["TSLA", "NVDA", "MSFT", "AAPL"],
   };
 }
 const client = new TwitterApi({
@@ -24,22 +24,71 @@ const client = new TwitterApi({
   accessToken: Credentials.ACCESS_TOKEN,
   accessSecret: Credentials.ACCESS_TOKEN_SECRET,
 });
+//const fetch = require('node-fetch');
 
-/*const test = await client.v2.tweet(
-  "Testing"
-)
-*/
+// API Key for CoinAPI
+const API_KEY = 'your_coinapi_key';
+const BASE_URL = 'https://rest.coinapi.io/v1/exchangerate';
+const generateCryptoUpdate = async (crypto, currency, apiKey, baseUrl) => {
+  try {
+    const now = new Date();
+    const sixHoursAgo = new Date(now.getTime() - 6 * 60 * 60 * 1000);
+
+    // Format dates for API
+    const time_end = now.toISOString();
+    const time_start = sixHoursAgo.toISOString();
+
+    // Fetch historical data
+    const response = await fetch(
+      `${baseUrl}/${crypto}/${currency}/history?period_id=6HRS&time_start=${time_start}&time_end=${time_end}`,
+      { headers: { 'X-CoinAPI-Key': apiKey } }
+    );
+
+    const data = await response.json();
+
+    if (!data.length) {
+      console.log('No data found for the specified time period.');
+      return;
+    }
+
+    // Extract rates
+    const { rate_open, rate_close } = data[0];
+
+    // Calculate percentage change
+    const percentageChange = ((rate_close - rate_open) / rate_open) * 100;
+
+    // Prepare tweet content
+    const tweet = `
+${percentageChange > 0 ? '🚀📈' : '📉🔻'} ${crypto}/${currency} Update:
+Opening Price: $${rate_open.toFixed(2)}
+Closing Price: $${rate_close.toFixed(2)}
+Change: ${percentageChange.toFixed(2)}% in the last 6 hours.
+#Stocks #${crypto} #${currency}
+    `;
+
+    console.log('Generated Tweet:\n', tweet);
+    return tweet;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};
+
+// Example Usage
+//generateCryptoUpdate('BTC', 'USD', 'your_api_key_here', 'https://rest.coinapi.io/v1/exchangerate');
+
 async function TweetRate(req, res) {
   const currency_rates = {};
   const crypto_rates = {};
+
   for (let i = 0; i < Credentials.RATES.CURRENCY.length; i++) {
     const value = Credentials.RATES.CURRENCY[i];
-    const response = await axios.get(`${Credentials.RATES.URL}/${value}/NGN`, {
+  /*  const response = await axios.get(`${Credentials.RATES.URL}/${value}/NGN`, {
       params: {
         apiKey: Credentials.RATES.API_KEY,
       },
-    });
-    currency_rates[value] = response.data.rate.toFixed(2);
+    });*/
+    let kPost = await generateCryptoUpdate(value, "USD",Credentials.RATES.API_KEY, BASE_URL);
+    await client.v2.tweet(kPost);
   }
   for (let i = 0; i < Credentials.RATES.COINS.length; i++) {
     const value = Credentials.RATES.COINS[i];
@@ -74,9 +123,9 @@ async function TweetRate(req, res) {
     crypto_rates["ETH"]
   }\n1 BNB → $${crypto_rates["BNB"]}
   `;
-  const currencyPosted = await client.v2.tweet(postString);
+ // const currencyPosted = await client.v2.tweet(postString);
   const coinPosted = await client.v2.tweet(coinString);
-  res.json({ currency: currencyPosted, coin: coinPosted });
+  res.json(true || false || !true || !false);
 }
 app.get("/cron", TweetRate);
 app.get("/", (req, res) => {
