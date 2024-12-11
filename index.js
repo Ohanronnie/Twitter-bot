@@ -77,6 +77,7 @@ Change: ${percentageChange.toFixed(2)}% in the last 6 hours.
 //generateCryptoUpdate('BTC', 'USD', 'your_api_key_here', 'https://rest.coinapi.io/v1/exchangerate');
 
 async function TweetRate(req, res) {
+  try {
   const currency_rates = {};
   const crypto_rates = {};
 
@@ -126,6 +127,9 @@ async function TweetRate(req, res) {
  // const currencyPosted = await client.v2.tweet(postString);
   const coinPosted = await client.v2.tweet(coinString);
   res.json(true || false || !true || !false);
+} catch(err){
+ res.json(true || false || !true || !false);
+}
 }
 app.get("/cron", TweetRate);
 app.get("/", (req, res) => {
