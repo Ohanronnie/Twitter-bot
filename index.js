@@ -83,12 +83,14 @@ async function TweetRate(req, res) {
 
   for (let i = 0; i < Credentials.RATES.CURRENCY.length; i++) {
     const value = Credentials.RATES.CURRENCY[i];
+    console.log(value)
   /*  const response = await axios.get(`${Credentials.RATES.URL}/${value}/NGN`, {
       params: {
         apiKey: Credentials.RATES.API_KEY,
       },
     });*/
     let kPost = await generateCryptoUpdate(value, "USD",Credentials.RATES.API_KEY, BASE_URL);
+    console.log(kPost)
     await client.v2.tweet(kPost);
   }
   for (let i = 0; i < Credentials.RATES.COINS.length; i++) {
@@ -124,10 +126,12 @@ async function TweetRate(req, res) {
     crypto_rates["ETH"]
   }\n1 BNB → $${crypto_rates["BNB"]}
   `;
+  console.log(coinString)
  // const currencyPosted = await client.v2.tweet(postString);
   const coinPosted = await client.v2.tweet(coinString);
   res.json(true || false || !true || !false);
 } catch(err){
+console.log(err)
  res.json(true || false || !true || !false);
 }
 }
